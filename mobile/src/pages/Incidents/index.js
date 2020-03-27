@@ -16,7 +16,7 @@ export default function Incidents () {
     const navigation = useNavigation();
 
     function navigateToDetail(incident){
-        navigation.naviga('Detail', { incident });
+        navigation.navigate('Detail', { incident });
     }
 
     async function loadIncidents() {
@@ -24,14 +24,14 @@ export default function Incidents () {
             return;
         }
 
-        if (tatal > 0 && incidents.length == total){
+        if (total > 0 && incidents.length == total){
             return;
         }
         setLoading(true);
 
-        const reponse = await api .get('incidents', {params: {page} });
+        const response = await api .get('incidents', {params: {page} });
         
-        setIncidents([... incidents, ...respone.data]);
+        setIncidents([... incidents, ...response.data]);
         setTotal(response.headers['x-total-count']);
         setPage(page + 1);
         setLoading(false);
@@ -46,7 +46,7 @@ export default function Incidents () {
             <View style={styles.header}>
                 <Image source={logoImg} />
                 <Text style={styles.headerText}>
-                    Total de <Text style={style.headerTextBold}>{total} casos. </Text>
+                    Total de <Text style={styles.headerTextBold}>{total} casos. </Text>
                 </Text>
             </View>
 
@@ -57,19 +57,19 @@ export default function Incidents () {
                 style={styles.incidentList} 
                 data={incidents}
                 keyExtractor={ incident => String(incident.id)}
-                showsVerticalScrollIndicator={false} //retira as barras de rolagem
+                showsVerticalScrollIndicator={false} 
                 onEndReached={ loadIncidents }
                 onEndReachedThreshold= {0.2}
                 renderItem={ ( { item: incident } ) => (
                     <View style={styles.incident}>
                         <Text style={styles.incidentProperty}>ONG:</Text>
-                        <Text style={styles.description}>{incident.name}</Text>
+                        <Text style={styles.incidentValue}>{incident.name}</Text>
 
                         <Text style={styles.incidentProperty}>CASO:</Text>
-                        <Text style={styles.description}>{incident.title}</Text>
+                        <Text style={styles.incidentValue}>{incident.title}</Text>
                     
                         <Text style={styles.incidentProperty}>Valor</Text>
-                        <Text style={styles.description}>{Intl.NumberFormat('pt-BR', { 
+                        <Text style={styles.incidentValue}>{Intl.NumberFormat('pt-BR', { 
                             style: 'currency', 
                             currency: 'BRL'
                             }).format(incident.value)}
